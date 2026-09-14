@@ -104,3 +104,44 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# =========================================================================
+# 🔥 FIREBASE & EDM4U SYSTEM - SỬA LỖI KHÔNG CHẶN ĐƯỢC FILE NATIVE
+# =========================================================================
+
+# 1. Chặn kho lưu trữ nhị phân Android thô của Firebase (Thư mục này nặng nhất, vài trăm MB)
+/[Aa]ssets/[Ff]irebase/m2repository/
+/[Aa]ssets/[Gg]enerated[Ll]ocal[Rr]epo/
+
+# 2. Chặn các file thư viện build động cho Desktop/Editor lỡ sinh ra trong folder Firebase gốc
+/[Aa]ssets/[Ff]irebase/Plugins/
+
+# 3. Khóa cứng toàn bộ file Native Binaries nặng trong Plugins (Android, iOS, tvOS, Desktop)
+/[Aa]ssets/[Pp]lugins/[Aa]ndroid/Firebase/
+/[Aa]ssets/[Pp]lugins/[Aa]ndroid/firebase-*.aar
+/[Aa]ssets/[Pp]lugins/[Aa]ndroid/firebase-*.meta
+/[Aa]ssets/[Pp]lugins/iOS/Firebase/
+/[Aa]ssets/[Pp]lugins/tvOS/
+/[Aa]ssets/[Pp]lugins/iOS/Firebase.meta
+/[Aa]ssets/[Pp]lugins/iOS.meta
+/[Aa]ssets/[Pp]lugins/tvOS.meta
+/[Aa]ssets/[Pp]lugins/x86_64/Firebase*
+/[Aa]ssets/[Pp]lugins/x86_64/libFirebase*
+
+# 4. Chặn các file xác thực meta và cấu hình local trong ProjectSettings
+/[Aa]ssets/[Gg]enerated[Ll]ocal[Rr]epo.meta
+/[Pp]roject[Ss]ettings/AndroidResolverDependencies.xml
+/[Pp]roject[Ss]ettings/GvhProjectSettings.xml
+
+*.gradle.backup*
+*.gradle.backup.meta
+
+# ── Unity Auto-Generated Performance & Test Assets ──
+**/PerformanceTestRunInfo.json
+**/PerformanceTestRunInfo.json.meta
+**/PerformanceTestRunSettings.json
+**/PerformanceTestRunSettings.json.meta
+**/XboxCloudSettings.asset
+**/XboxCloudSettings.asset.meta
+Builds IOS/
+Builds IOS.zip
