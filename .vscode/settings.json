@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "MCPGit.slnx",
+    "dotnet.defaultSolution": "MCP.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }

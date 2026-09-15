@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoxGridSpawner : MonoBehaviour
@@ -6,6 +7,10 @@ public class BoxGridSpawner : MonoBehaviour
     [SerializeField] private int columns = 5;
     [SerializeField] private int rows = 2;
     [SerializeField] private float spacing = 1.1f;
+
+    private readonly List<BallColorType> _spawnedColors = new();
+
+    public IReadOnlyList<BallColorType> SpawnedColors => _spawnedColors;
 
     private void Start()
     {
@@ -29,7 +34,9 @@ public class BoxGridSpawner : MonoBehaviour
                 if (box == null)
                     continue;
 
-                box.Setup(ColorPalette.GetRandom());
+                BallColorType color = ColorPalette.GetRandom();
+                box.Setup(color);
+                _spawnedColors.Add(color);
             }
         }
     }

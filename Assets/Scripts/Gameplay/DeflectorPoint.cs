@@ -14,7 +14,8 @@ public class DeflectorPoint : MonoBehaviour
 
         ball.HasDeflected = true;
 
-        float sign = Random.value < 0.5f ? -1f : 1f;
-        other.attachedRigidbody.AddForce(Vector3.right * sign * deflectForce, ForceMode.VelocityChange);
+        float angle = Random.Range(45f, 135f) * Mathf.Deg2Rad;
+        Vector3 direction = new(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+        other.attachedRigidbody.AddForce(direction * deflectForce, ForceMode.VelocityChange);
     }
 }
