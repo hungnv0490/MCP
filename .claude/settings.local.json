@@ -4,5 +4,9 @@
       "mcp__unity-mcp__Unity_RunCommand",
       "mcp__unity-mcp__Unity_GetConsoleLogs"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "ai-game-developer"
+  ],
+  "enableAllProjectMcpServers": true
 }

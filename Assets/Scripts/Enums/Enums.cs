@@ -4,7 +4,9 @@ public enum PoolType
 {
     None,
     Box,
-    PixcelItem
+    PixcelItem,
+    GameBox,
+    Ball
 }
 
 public enum GameState
@@ -14,4 +16,13 @@ public enum GameState
     Paused,
     Win,
     Fail
+}
+
+public enum BallColorType
+{
+    Red,
+    Blue,
+    Green,
+    Yellow,
+    Purple
 }
