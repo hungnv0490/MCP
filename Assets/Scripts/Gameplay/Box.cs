@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(PoolObject))]
 public class Box : MonoBehaviour, IPoolable
 {
+    [SerializeField] private string instanceId;
     [SerializeField] private Renderer boxRenderer;
 
     private static readonly List<Box> _active = new();
@@ -18,6 +20,7 @@ public class Box : MonoBehaviour, IPoolable
 
     private void Awake()
     {
+        instanceId = GetEntityId().ToString();
         poolObject = GetComponent<PoolObject>();
     }
 
@@ -33,10 +36,10 @@ public class Box : MonoBehaviour, IPoolable
         _active.Clear();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         // Two balls landing on the same box within the same physics step both raise
-        // OnCollisionEnter before either's deactivation takes effect. Once this box has
+        // OnCollisionEnter2D before either's deactivation takes effect. Once this box has
         // already been consumed, bail out so the second ball isn't wrongly destroyed too.
         if (poolObject.IsPooled)
             return;
@@ -51,6 +54,8 @@ public class Box : MonoBehaviour, IPoolable
         // consume the first one it matches, not destroy both from a single ball.
         if (ball.IsPooled)
             return;
+
+        Debug.Log($"Box {instanceId} matched by Ball {ball.GetEntityId()} (Color: {ColorType})");
 
         ball.OnMatchedBox();
         GameObjectPool.Instance.ReturnToPool(this);

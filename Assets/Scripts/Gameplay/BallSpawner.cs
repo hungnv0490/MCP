@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BallSpawner : MonoBehaviour
 {
+    public static BallSpawner Instance { get; private set; }
+
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private BoxGridSpawner boxGridSpawner;
     [SerializeField] private float launchSpeed = 10f;
@@ -11,6 +13,8 @@ public class BallSpawner : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         if (boxGridSpawner == null)
             boxGridSpawner = GetComponent<BoxGridSpawner>();
     }
@@ -45,7 +49,23 @@ public class BallSpawner : MonoBehaviour
         if (ball == null)
             return;
 
-        ball.Setup(colorType, Vector3.up * launchSpeed);
+        ball.Setup(colorType, Vector2.up * launchSpeed);
+    }
+
+    // Dispenses `count` balls of `colorType` from the spawn point, one per spawnInterval.
+    // Called by BallContainerManager when a queued container arrives at the launch slot.
+    public void SpawnBalls(BallColorType colorType, int count)
+    {
+        StartCoroutine(SpawnBallsRoutine(colorType, count));
+    }
+
+    private IEnumerator SpawnBallsRoutine(BallColorType colorType, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SpawnBall(colorType);
+            yield return new WaitForSeconds(spawnInterval);
+        }
     }
 
     private static void Shuffle(IList<BallColorType> list)

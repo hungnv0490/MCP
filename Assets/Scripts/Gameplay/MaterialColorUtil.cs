@@ -7,6 +7,14 @@ public static class MaterialColorUtil
 
     public static void Apply(Renderer renderer, Color color)
     {
+        // SpriteRenderer has a dedicated per-instance tint that doesn't allocate a
+        // material instance at all -- cheaper and simpler than going through material.
+        if (renderer is SpriteRenderer spriteRenderer)
+        {
+            spriteRenderer.color = color;
+            return;
+        }
+
         Material material = renderer.material;
 
         if (material.HasProperty(BaseColorId))
