@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 144793130}
   - component: {fileID: 144793129}
   - component: {fileID: 144793128}
+  - component: {fileID: 144793131}
   m_Layer: 0
   m_Name: TubeWallLeft
   m_TagString: Untagged
@@ -147,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 144793126}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8, y: -3, z: 0}
+  m_LocalPosition: {x: -0.8, y: -3.15, z: 0}
   m_LocalScale: {x: 0.2, y: 6.2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -231,6 +232,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144793126}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &144793131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144793126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e3bb47c68a32d41b186bdb07b3808f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TubeGuideWall
 --- !u!114 &277049670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +492,7 @@ GameObject:
   - component: {fileID: 516189831}
   - component: {fileID: 516189830}
   m_Layer: 0
-  m_Name: DeflectorPointA
+  m_Name: DeflectorPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -498,6 +511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeflectorPoint
   deflectForce: 7
+  deadZoneHalfWidth: 10
 --- !u!65 &516189831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -770,6 +784,7 @@ GameObject:
   - component: {fileID: 696498125}
   - component: {fileID: 696498124}
   - component: {fileID: 696498123}
+  - component: {fileID: 696498126}
   m_Layer: 0
   m_Name: TubeWallRight
   m_TagString: Untagged
@@ -786,7 +801,7 @@ Transform:
   m_GameObject: {fileID: 696498121}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8, y: -3, z: 0}
+  m_LocalPosition: {x: 0.8, y: -3.15, z: 0}
   m_LocalScale: {x: 0.2, y: 6.2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -870,6 +885,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 696498121}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &696498126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696498121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e3bb47c68a32d41b186bdb07b3808f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TubeGuideWall
 --- !u!1 &743998703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,7 +1371,7 @@ Transform:
   m_GameObject: {fileID: 1064844067}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.07, z: 0}
+  m_LocalPosition: {x: 0, y: 1.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1556,72 +1583,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1545227543
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1545227546}
-  - component: {fileID: 1545227545}
-  - component: {fileID: 1545227544}
-  m_Layer: 0
-  m_Name: BallKillZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1545227544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545227543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2f89779044fd264ebed42c7dc529794, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BallKillZone
---- !u!65 &1545227545
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545227543}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4, y: 1, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &1545227546
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545227543}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2045,7 +2006,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2452137983466666
 Transform:
   m_ObjectHideFlags: 0
@@ -2135,7 +2096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9979616355759460
 Transform:
   m_ObjectHideFlags: 0
@@ -2161,9 +2122,8 @@ SceneRoots:
   - {fileID: 1682902919}
   - {fileID: 1472284845}
   - {fileID: 1800414345}
-  - {fileID: 1402289289}
-  - {fileID: 1545227546}
+  - {fileID: 1064844068}
   - {fileID: 516189832}
   - {fileID: 9979616355759460}
   - {fileID: 2452137983466666}
-  - {fileID: 1064844068}
+  - {fileID: 1402289289}

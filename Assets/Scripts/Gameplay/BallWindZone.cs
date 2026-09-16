@@ -25,7 +25,7 @@ public class BallWindZone : MonoBehaviour
         if (!IsActive)
             return;
 
-        if (!other.TryGetComponent<Ball>(out _))
+        if (!other.CompareTag(Ball.Tag))
             return;
 
         other.attachedRigidbody.AddForce(transform.right * force, ForceMode.Acceleration);
