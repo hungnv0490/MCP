@@ -24,6 +24,17 @@ public class BallContainer : MonoBehaviour
     // it despawns) -- this is what should trigger balls to start spawning.
     public event Action<BallContainer> Arrived;
 
+    private void Awake()
+    {
+        // TextMeshPro's MeshRenderer doesn't expose Sorting Layer/Order in Layer in the
+        // Normal inspector (only in Debug mode), so pin it above the background sprite here
+        // instead -- otherwise same-order transparent renderers sort by camera distance,
+        // which can flicker the label behind the background.
+        Renderer countLabelRenderer = countLabel.GetComponent<Renderer>();
+        countLabelRenderer.sortingLayerID = background.sortingLayerID;
+        countLabelRenderer.sortingOrder = background.sortingOrder + 1;
+    }
+
     public void Setup(BallColorType colorType, int ballCount, int columnIndex)
     {
         ColorType = colorType;

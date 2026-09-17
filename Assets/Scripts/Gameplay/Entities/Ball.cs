@@ -22,6 +22,13 @@ public class Ball : MonoBehaviour, IPoolable
     [Tooltip("The ball's normal bouncy material, restored once it exits the tube into the box area.")]
     [SerializeField] private PhysicsMaterial2D normalMaterial;
 
+    // "BallInTube" collides with itself (unlike the normal "Ball" layer, which ignores
+    // ball-ball collisions) so balls queued in the narrow, frictionless tube bump into
+    // each other instead of visibly overlapping. Swapped back to the ball's original
+    // layer in ExitTube() once it reaches the open box area.
+    private static int tubeLayer;
+    private int defaultLayer;
+
     [Header("Endgame Assist Steering")]
     [Tooltip("Only steers the ball when this many (or fewer) boxes are still alive in the scene.")]
     [SerializeField] private int assistBoxThreshold = 2;
@@ -58,6 +65,8 @@ public class Ball : MonoBehaviour, IPoolable
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep; // Balls bounce forever; never let PhysX put them to sleep.
         ballCollider = GetComponent<Collider2D>();
         poolObject = GetComponent<PoolObject>();
+        defaultLayer = gameObject.layer;
+        tubeLayer = LayerMask.NameToLayer("BallInTube");
     }
 
     private void FixedUpdate()
@@ -140,6 +149,7 @@ public class Ball : MonoBehaviour, IPoolable
     public void ExitTube()
     {
         ballCollider.sharedMaterial = normalMaterial;
+        gameObject.layer = defaultLayer;
     }
 
     public void OnSpawn()
@@ -151,6 +161,7 @@ public class Ball : MonoBehaviour, IPoolable
         // Every launch starts by traveling up through the tube, which needs the
         // ball to not bounce off its walls (see TubeExitPoint for the handoff back).
         ballCollider.sharedMaterial = tubeMaterial;
+        gameObject.layer = tubeLayer;
 
         if (BottomWallCenter.Instance != null)
             Physics2D.IgnoreCollision(ballCollider, BottomWallCenter.Instance.WallCollider, true);

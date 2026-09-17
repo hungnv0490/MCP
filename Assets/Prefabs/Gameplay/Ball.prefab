@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd27a9277144f747b42b88f93b47032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolObject
-  PoolType: 0
+  PoolType: 4
   IsPooled: 0
 --- !u!114 &4800638809294220594
 MonoBehaviour:

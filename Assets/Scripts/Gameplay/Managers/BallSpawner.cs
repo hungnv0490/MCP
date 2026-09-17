@@ -7,7 +7,7 @@ public class BallSpawner : MonoBehaviour
     public static BallSpawner Instance { get; private set; }
 
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private BoxGridSpawner boxGridSpawner;
+    // [SerializeField] private BoxGridSpawner boxGridSpawner;
     [SerializeField] private float launchSpeed = 10f;
     [SerializeField] private float spawnInterval = 0.8f;
 
@@ -15,13 +15,13 @@ public class BallSpawner : MonoBehaviour
     {
         Instance = this;
 
-        if (boxGridSpawner == null)
-            boxGridSpawner = GetComponent<BoxGridSpawner>();
+            // if (boxGridSpawner == null)
+            //     boxGridSpawner = GetComponent<BoxGridSpawner>();
     }
 
     private void Start()
     {
-        StartCoroutine(SpawnRoutine());
+        // StartCoroutine(SpawnRoutine());
     }
 
     private IEnumerator SpawnRoutine()
@@ -29,14 +29,14 @@ public class BallSpawner : MonoBehaviour
         // Wait a frame so BoxGridSpawner.Start() has spawned its boxes first.
         yield return null;
 
-        List<BallColorType> colors = new(boxGridSpawner.SpawnedColors);
-        Shuffle(colors);
+        // List<BallColorType> colors = new(boxGridSpawner.SpawnedColors);
+        // Shuffle(colors);
 
-        foreach (BallColorType color in colors)
-        {
-            SpawnBall(color);
-            yield return new WaitForSeconds(spawnInterval);
-        }
+        // foreach (BallColorType color in colors)
+        // {
+        //     SpawnBall(color);
+        //     yield return new WaitForSeconds(spawnInterval);
+        // }
     }
 
     private void SpawnBall(BallColorType colorType)

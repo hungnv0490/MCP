@@ -18,12 +18,18 @@ public class DeflectorPoint : MonoBehaviour
              "into two halves (e.g. to avoid firing straight up the middle). 0 disables splitting.")]
     [SerializeField] private float deadZoneHalfWidth = 10f;
 
+    [Tooltip("Optional: point this at another DeflectorPoint (or shared marker) to have both instances " +
+             "share the same one-shot consumption slot -- e.g. two 'gun' deflectors sitting on opposite " +
+             "sides of the box area that a bouncing ball could wander into both of, which would otherwise " +
+             "stack two full impulses onto the same ball. Leave empty for the normal per-instance behaviour.")]
+    [SerializeField] private Object sharedJunctionKey;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag(Ball.Tag) || !other.TryGetComponent(out Ball ball))
             return;
 
-        if (!ball.TryConsumeJunction(this))
+        if (!ball.TryConsumeJunction(sharedJunctionKey != null ? sharedJunctionKey : this))
             return;
 
         float angle = PickAngleDeg() * Mathf.Deg2Rad;

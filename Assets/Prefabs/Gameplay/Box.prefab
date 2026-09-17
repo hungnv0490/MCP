@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd27a9277144f747b42b88f93b47032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolObject
-  PoolType: 0
+  PoolType: 1
   IsPooled: 0
 --- !u!114 &8512652108422403134
 MonoBehaviour:
@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a869f9b5f72be47be2ac45d4494e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Box
+  instanceId: 
   boxRenderer: {fileID: 802432734849408086}
 --- !u!212 &802432734849408086
 SpriteRenderer:
