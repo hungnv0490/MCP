@@ -5,8 +5,11 @@ public class E_Box : MonoBehaviour, IPoolable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    public Color CurrentColor { get; private set; }
+
     public void SetColor(Color color)
     {
+        CurrentColor = color;
         spriteRenderer.color = color;
     }
 

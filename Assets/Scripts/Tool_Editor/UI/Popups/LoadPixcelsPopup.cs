@@ -52,10 +52,28 @@ public class LoadPixcelsPopup : MonoBehaviour
             string assetPath = file.Replace('\\', '/');
 
             var importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
-            if (importer != null && !importer.isReadable)
+            if (importer != null)
             {
-                importer.isReadable = true;
-                importer.SaveAndReimport();
+                bool needsReimport = false;
+
+                if (!importer.isReadable)
+                {
+                    importer.isReadable = true;
+                    needsReimport = true;
+                }
+
+                // Block compression (DXT/BC7/ASTC) is lossy -- GetPixel() on a compressed
+                // texture decodes slightly different colors for pixels that were meant to
+                // be identical, which fragments E_BoxesManager.GetColorCounts() into many
+                // near-duplicate colors instead of one real color per intended box color.
+                if (importer.textureCompression != TextureImporterCompression.Uncompressed)
+                {
+                    importer.textureCompression = TextureImporterCompression.Uncompressed;
+                    needsReimport = true;
+                }
+
+                if (needsReimport)
+                    importer.SaveAndReimport();
             }
 
             Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
@@ -63,7 +81,7 @@ public class LoadPixcelsPopup : MonoBehaviour
             if (sprite == null && texture != null)
                 sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
-            E_PixcelItem entry = GameObjectPool.Instance.Get<E_PixcelItem>(PoolType.PixcelItem, Vector3.zero, Quaternion.identity, content);
+            E_PixcelItem entry = GameObjectPool.Instance.Get<E_PixcelItem>(PoolType.E_PixcelItem, Vector3.zero, Quaternion.identity, content);
             if (entry == null)
                 continue;
 

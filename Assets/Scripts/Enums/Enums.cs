@@ -3,10 +3,12 @@
 public enum PoolType
 {
     None,
-    Box,
-    PixcelItem,
+    E_Box,
+    E_PixcelItem,
     GameBox,
-    Ball
+    Ball,
+    E_BallContainer,
+    E_BallCountItem
 }
 
 public enum GameState
