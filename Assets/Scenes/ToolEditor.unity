@@ -949,7 +949,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Load
+  m_Text: Load Pixel
 --- !u!222 &301432028
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1558,7 +1558,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::E_CameraPanController
   targetCamera: {fileID: 0}
-  edgeMargin: 1
+  edgeMargin: 2
+  zoomSpeed: 0.4
+  minOrthographicSize: 2
+  maxOrthographicSize: 30
 --- !u!1 &527546203
 GameObject:
   m_ObjectHideFlags: 0
@@ -2771,7 +2774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::E_BoxesManager
   spawnPoint: {fileID: 2049149890}
-  boxSize: 1
+  boxSize: 1.5
 --- !u!1 &1050367829
 GameObject:
   m_ObjectHideFlags: 0
@@ -5671,7 +5674,7 @@ GameObject:
   - component: {fileID: 2034408823}
   - component: {fileID: 2034408822}
   m_Layer: 0
-  m_Name: Load Btn
+  m_Name: Load Pixel Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5695,7 +5698,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -55.056}
-  m_SizeDelta: {x: 170, y: 65.084}
+  m_SizeDelta: {x: 222.667, y: 65.084}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &2034408822
 MonoBehaviour:

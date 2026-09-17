@@ -6,11 +6,18 @@ using UnityEngine.InputSystem;
 // space -- not while grabbing a container or box) to see content taller than the
 // screen, e.g. a long ball-container column or a tall box grid. The vertical
 // range is clamped to the actual generated content, so once everything already
-// fits on screen the drag is a no-op.
+// fits on screen the drag is a no-op. The mouse scroll wheel zooms the camera in
+// and out (adjusting orthographic size), clamped to a configurable size range and
+// re-clamped against the pan bounds afterward.
 public class E_CameraPanController : MonoBehaviour
 {
     [SerializeField] private Camera targetCamera;
     [SerializeField] private float edgeMargin = 1f;
+
+    [Tooltip("Orthographic size removed per unit of mouse-wheel scroll.")]
+    [SerializeField] private float zoomSpeed = 0.02f;
+    [SerializeField] private float minOrthographicSize = 2f;
+    [SerializeField] private float maxOrthographicSize = 30f;
 
     private bool isPanning;
     private Vector3 lastWorldPoint;
@@ -33,6 +40,28 @@ public class E_CameraPanController : MonoBehaviour
 
         if (isPanning)
             ContinuePan();
+
+        TryZoom();
+    }
+
+    private void TryZoom()
+    {
+        float scroll = Mouse.current.scroll.ReadValue().y;
+        if (Mathf.Approximately(scroll, 0f))
+            return;
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // Scrolling up (positive) zooms in (smaller orthographic size); down zooms out.
+        float size = targetCamera.orthographicSize - scroll * zoomSpeed;
+        targetCamera.orthographicSize = Mathf.Clamp(size, minOrthographicSize, maxOrthographicSize);
+
+        // The valid pan range depends on orthographic size, so re-clamp the current
+        // position -- otherwise zooming out could reveal empty space past the content.
+        Vector3 position = targetCamera.transform.position;
+        position.y = ClampY(position.y);
+        targetCamera.transform.position = position;
     }
 
     private void TryBeginPan()
