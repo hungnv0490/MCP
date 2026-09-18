@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider))]
 public class BallWindZone : MonoBehaviour
 {
     [SerializeField] private float force = 8f;
@@ -17,10 +17,10 @@ public class BallWindZone : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<Collider2D>().isTrigger = true;
+        GetComponent<Collider>().isTrigger = true;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerStay(Collider other)
     {
         if (!IsActive)
             return;
@@ -28,10 +28,11 @@ public class BallWindZone : MonoBehaviour
         if (!other.CompareTag(Ball.Tag))
             return;
 
-        // ForceMode2D has no mass-independent "Acceleration" option like 3D does,
-        // so scale by mass to cancel out F=ma and get the same acceleration regardless of mass.
-        Rigidbody2D otherRb = other.attachedRigidbody;
-        otherRb.AddForce((Vector2)transform.right * force * otherRb.mass, ForceMode2D.Force);
+        // Scaled by mass to cancel out F=ma and get the same acceleration regardless of
+        // mass, matching the AddForce(..., ForceMode.Force) convention used elsewhere
+        // (DeflectorPoint/TubeExitPoint/Ball) rather than mixing in ForceMode.Acceleration.
+        Rigidbody otherRb = other.attachedRigidbody;
+        otherRb.AddForce(transform.right * force * otherRb.mass, ForceMode.Force);
     }
 
     private void OnDrawGizmos()

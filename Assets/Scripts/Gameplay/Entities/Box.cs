@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(PoolObject))]
 public class Box : MonoBehaviour, IPoolable
 {
@@ -36,10 +36,10 @@ public class Box : MonoBehaviour, IPoolable
         _active.Clear();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         // Two balls landing on the same box within the same physics step both raise
-        // OnCollisionEnter2D before either's deactivation takes effect. Once this box has
+        // OnCollisionEnter before either's deactivation takes effect. Once this box has
         // already been consumed, bail out so the second ball isn't wrongly destroyed too.
         if (poolObject.IsPooled)
             return;

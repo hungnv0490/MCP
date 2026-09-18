@@ -4,10 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider))]
 public class BallContainer : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer background;
+    [SerializeField] private Renderer background;
     [SerializeField] private TMP_Text countLabel;
     [SerializeField] private float flyDuration = 0.35f;
     [SerializeField] private float frontScale = 1.1f;
@@ -23,17 +23,6 @@ public class BallContainer : MonoBehaviour
     // Raised once the container actually reaches the launch slot (right before
     // it despawns) -- this is what should trigger balls to start spawning.
     public event Action<BallContainer> Arrived;
-
-    private void Awake()
-    {
-        // TextMeshPro's MeshRenderer doesn't expose Sorting Layer/Order in Layer in the
-        // Normal inspector (only in Debug mode), so pin it above the background sprite here
-        // instead -- otherwise same-order transparent renderers sort by camera distance,
-        // which can flicker the label behind the background.
-        Renderer countLabelRenderer = countLabel.GetComponent<Renderer>();
-        countLabelRenderer.sortingLayerID = background.sortingLayerID;
-        countLabelRenderer.sortingOrder = background.sortingOrder + 1;
-    }
 
     public void Setup(BallColorType colorType, int ballCount, int columnIndex)
     {

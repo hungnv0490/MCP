@@ -24,7 +24,7 @@ public class DeflectorPoint : MonoBehaviour
              "stack two full impulses onto the same ball. Leave empty for the normal per-instance behaviour.")]
     [SerializeField] private Object sharedJunctionKey;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(Ball.Tag) || !other.TryGetComponent(out Ball ball))
             return;
@@ -33,12 +33,12 @@ public class DeflectorPoint : MonoBehaviour
             return;
 
         float angle = PickAngleDeg() * Mathf.Deg2Rad;
-        Vector2 direction = new(Mathf.Cos(angle), Mathf.Sin(angle));
+        Vector3 direction = new(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
 
-        // ForceMode2D has no direct "VelocityChange" (mass-independent instant kick) like 3D --
-        // Impulse divides by mass to get a velocity change, so multiply by mass first to cancel
-        // that out and land on the same mass-independent instant velocity change.
-        other.attachedRigidbody.AddForce(direction * deflectForce * other.attachedRigidbody.mass, ForceMode2D.Impulse);
+        // Impulse divides by mass to get a velocity change, so multiply by mass first to
+        // cancel that out and land on a mass-independent instant velocity change, matching
+        // the convention used throughout this codebase's other impulse/force sites.
+        other.attachedRigidbody.AddForce(direction * deflectForce * other.attachedRigidbody.mass, ForceMode.Impulse);
     }
 
     private float PickAngleDeg()

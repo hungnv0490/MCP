@@ -49,7 +49,7 @@ public class BallSpawner : MonoBehaviour
         if (ball == null)
             return;
 
-        ball.Setup(colorType, Vector2.up * launchSpeed);
+        ball.Setup(colorType, Vector3.up * launchSpeed);
     }
 
     // Dispenses `count` balls of `colorType` from the spawn point, one per spawnInterval.

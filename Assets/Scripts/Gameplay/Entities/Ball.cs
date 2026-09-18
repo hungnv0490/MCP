@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(PoolObject))]
 public class Ball : MonoBehaviour, IPoolable
 {
@@ -12,15 +12,15 @@ public class Ball : MonoBehaviour, IPoolable
 
     [SerializeField] private string instanceId;
     [SerializeField] private Renderer ballRenderer;
-    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Rigidbody rb;
     [SerializeField] private float gravityScale = 0.45f;
 
     [Header("Tube Physics Material Swap")]
     [Tooltip("Zero bounciness/friction, assigned while the ball travels through the tube " +
              "(DeflectorPoint/BallWindZone rely on it not bouncing off tube walls).")]
-    [SerializeField] private PhysicsMaterial2D tubeMaterial;
+    [SerializeField] private PhysicsMaterial tubeMaterial;
     [Tooltip("The ball's normal bouncy material, restored once it exits the tube into the box area.")]
-    [SerializeField] private PhysicsMaterial2D normalMaterial;
+    [SerializeField] private PhysicsMaterial normalMaterial;
 
     // "BallInTube" collides with itself (unlike the normal "Ball" layer, which ignores
     // ball-ball collisions) so balls queued in the narrow, frictionless tube bump into
@@ -38,7 +38,7 @@ public class Ball : MonoBehaviour, IPoolable
     [SerializeField] private float assistRampTime = 4f;
     [SerializeField] private float assistForce = 1.5f;
 
-    private Collider2D ballCollider;
+    private Collider ballCollider;
     private PoolObject poolObject;
     private bool passedBottomWall;
     private float aliveTime;
@@ -51,7 +51,7 @@ public class Ball : MonoBehaviour, IPoolable
     public BallColorType ColorType { get; private set; }
 
     // Cached instead of TryGetComponent<PoolObject>() on every collision check
-    // (Box.OnCollisionEnter2D reads this once per hit to guard against double-consumption).
+    // (Box.OnCollisionEnter reads this once per hit to guard against double-consumption).
     public bool IsPooled => poolObject.IsPooled;
 
     // Returns true (and remembers it) the first time this specific junction is passed
@@ -61,9 +61,12 @@ public class Ball : MonoBehaviour, IPoolable
     private void Awake()
     {
         instanceId = GetEntityId().ToString();
-        rb.gravityScale = gravityScale; // Physics2D applies Physics2D.gravity * gravityScale automatically each step.
-        rb.sleepMode = RigidbodySleepMode2D.NeverSleep; // Balls bounce forever; never let PhysX put them to sleep.
-        ballCollider = GetComponent<Collider2D>();
+
+        // 3D Rigidbody has no per-body gravity-scale multiplier like Rigidbody2D did,
+        // so gravity is applied manually in FixedUpdate to keep the same tunable feel.
+        rb.useGravity = false;
+        rb.sleepThreshold = 0f; // Balls bounce forever; never let PhysX put them to sleep.
+        ballCollider = GetComponent<Collider>();
         poolObject = GetComponent<PoolObject>();
         defaultLayer = gameObject.layer;
         tubeLayer = LayerMask.NameToLayer("BallInTube");
@@ -71,14 +74,7 @@ public class Ball : MonoBehaviour, IPoolable
 
     private void FixedUpdate()
     {
-        // One-way gate: BottomWallCenter is ignored while the ball is passing through
-        // it from below; once the ball has fully cleared it, treat it as a solid Bounds wall.
-        if (!passedBottomWall && BottomWallCenter.Instance != null &&
-            ballCollider.bounds.min.y >= BottomWallCenter.Instance.TopY)
-        {
-            passedBottomWall = true;
-            Physics2D.IgnoreCollision(ballCollider, BottomWallCenter.Instance.WallCollider, false);
-        }
+        rb.AddForce(Physics.gravity * gravityScale * rb.mass, ForceMode.Force);
 
         aliveTime += Time.fixedDeltaTime;
         ApplyAssistSteering();
@@ -97,16 +93,17 @@ public class Ball : MonoBehaviour, IPoolable
         if (target == null)
             return;
 
-        Vector2 toTarget = target.transform.position - transform.position;
+        Vector3 toTarget = target.transform.position - transform.position;
 
         if (toTarget.sqrMagnitude < 0.01f)
             return;
 
         float ramp = Mathf.Clamp01((aliveTime - assistDelay) / assistRampTime);
 
-        // ForceMode2D has no mass-independent "Acceleration" option like 3D does,
-        // so scale by mass to cancel out F=ma and get the same acceleration regardless of mass.
-        rb.AddForce(toTarget.normalized * (assistForce * ramp) * rb.mass, ForceMode2D.Force);
+        // ForceMode has no mass-independent "Acceleration" option that ignores mass by
+        // default with a plain force, so scale by mass to cancel out F=ma and get the
+        // same acceleration regardless of mass.
+        rb.AddForce(toTarget.normalized * (assistForce * ramp) * rb.mass, ForceMode.Force);
     }
 
     private Box FindNearestMatchingBox()
@@ -119,7 +116,7 @@ public class Ball : MonoBehaviour, IPoolable
             if (box.ColorType != ColorType)
                 continue;
 
-            float sqrDistance = ((Vector2)box.transform.position - (Vector2)transform.position).sqrMagnitude;
+            float sqrDistance = (box.transform.position - transform.position).sqrMagnitude;
             if (sqrDistance < nearestSqrDistance)
             {
                 nearestSqrDistance = sqrDistance;
@@ -130,13 +127,13 @@ public class Ball : MonoBehaviour, IPoolable
         return nearest;
     }
 
-    public void Setup(BallColorType colorType, Vector2 velocity)
+    public void Setup(BallColorType colorType, Vector3 velocity)
     {
         ColorType = colorType;
         MaterialColorUtil.Apply(ballRenderer, ColorPalette.Get(colorType));
 
         rb.linearVelocity = velocity;
-        rb.angularVelocity = 0f;
+        rb.angularVelocity = Vector3.zero;
     }
 
     public void OnMatchedBox()
@@ -162,14 +159,11 @@ public class Ball : MonoBehaviour, IPoolable
         // ball to not bounce off its walls (see TubeExitPoint for the handoff back).
         ballCollider.sharedMaterial = tubeMaterial;
         gameObject.layer = tubeLayer;
-
-        if (BottomWallCenter.Instance != null)
-            Physics2D.IgnoreCollision(ballCollider, BottomWallCenter.Instance.WallCollider, true);
     }
 
     public void OnDespawn()
     {
-        rb.linearVelocity = Vector2.zero;
-        rb.angularVelocity = 0f;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 }

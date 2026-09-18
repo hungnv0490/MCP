@@ -17,9 +17,9 @@ public class TubeExitPoint : MonoBehaviour
              "ball time to fully cross the seam before those walls become solid again.")]
     [SerializeField] private float ignoreCollisionDuration = 0.3f;
 
-    [SerializeField] private Collider2D[] boundaryWallsToIgnore;
+    [SerializeField] private Collider[] boundaryWallsToIgnore;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(Ball.Tag) || !other.TryGetComponent(out Ball ball))
             return;
@@ -29,28 +29,28 @@ public class TubeExitPoint : MonoBehaviour
 
         ball.ExitTube();
 
-        Rigidbody2D rb = other.attachedRigidbody;
+        Rigidbody rb = other.attachedRigidbody;
 
-        foreach (Collider2D wall in boundaryWallsToIgnore)
-            Physics2D.IgnoreCollision(other, wall, true);
+        foreach (Collider wall in boundaryWallsToIgnore)
+            Physics.IgnoreCollision(other, wall, true);
 
         float angle = Random.Range(minAngleDeg, maxAngleDeg) * Mathf.Deg2Rad;
-        Vector2 direction = new(Mathf.Cos(angle), Mathf.Sin(angle));
+        Vector3 direction = new(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
 
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(direction * launchForce * rb.mass, ForceMode2D.Impulse);
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(direction * launchForce * rb.mass, ForceMode.Impulse);
 
         StartCoroutine(RestoreCollisionAfterDelay(other));
     }
 
-    private IEnumerator RestoreCollisionAfterDelay(Collider2D ballCollider)
+    private IEnumerator RestoreCollisionAfterDelay(Collider ballCollider)
     {
         yield return new WaitForSeconds(ignoreCollisionDuration);
 
         if (ballCollider == null)
             yield break;
 
-        foreach (Collider2D wall in boundaryWallsToIgnore)
-            Physics2D.IgnoreCollision(ballCollider, wall, false);
+        foreach (Collider wall in boundaryWallsToIgnore)
+            Physics.IgnoreCollision(ballCollider, wall, false);
     }
 }
